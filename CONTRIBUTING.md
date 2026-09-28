@@ -12,7 +12,7 @@ This creates your own copy.
 
 
 ```bash
-git clone https://github.com/yaswanth42/smart-blood-bank-management.git
+git clone https://github.com/hasini353/Blood-Bank.git
 ```
 
 ## 3. Create a New Branch
