@@ -1,114 +1,75 @@
 import React from 'react';
-import { 
-  Heart, 
-  Users, 
-  Shield, 
-  Award, 
-  Target,
-  Droplet,
-  Clock,
-  MapPin,
-  Phone,
-  Mail,
-  Globe
-} from 'lucide-react';
+import { Heart, Users, Shield, Award, Target, Droplet, Clock, MapPin } from 'lucide-react';
 import Footer from '../Footer';
 import Header from '../Header';
 
 const AboutUs = () => {
   const stats = [
-    { icon: Users, number: '50,000+', label: 'Lives Saved' },
-    { icon: Droplet, number: '100,000+', label: 'Donations' },
-    { icon: MapPin, number: '500+', label: 'Camps Organized' },
-    { icon: Shield, number: '99.8%', label: 'Safety Rate' }
+    { icon: Users, number: '10,000+', label: 'Lives Saved' },
+    { icon: Droplet, number: '50,000+', label: 'Blood Units Managed' },
+    { icon: MapPin, number: '150+', label: 'Partner Facilities' },
+    { icon: Clock, number: '< 30 min', label: 'Avg Response Time' },
   ];
 
   const values = [
     {
       icon: Heart,
       title: 'Compassion',
-      description: 'We believe in the power of human kindness and the impact one person can make in saving lives.'
+      description: 'We believe in the power of human kindness and the impact one person can make in saving lives.',
     },
     {
       icon: Shield,
       title: 'Safety First',
-      description: 'Every donation follows strict medical protocols ensuring donor safety and blood quality.'
+      description: 'Every donation follows strict medical protocols ensuring donor safety and blood quality.',
     },
     {
       icon: Users,
       title: 'Community',
-      description: 'Building strong communities where people help each other in times of need.'
+      description: 'Building strong communities where people help each other in times of critical need.',
     },
     {
       icon: Target,
       title: 'Excellence',
-      description: 'Committed to maintaining the highest standards in blood collection and distribution.'
-    }
-  ];
-
-  const team = [
-    {
-      name: 'Dr. Sarah Chen',
-      role: 'Medical Director',
-      image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop&crop=face',
-      bio: '15+ years in hematology and transfusion medicine'
+      description: 'Committed to maintaining the highest standards in blood collection and distribution.',
     },
-    {
-      name: 'Michael Rodriguez',
-      role: 'Operations Head',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
-      bio: 'Expert in healthcare logistics and camp management'
-    },
-    {
-      name: 'Priya Sharma',
-      role: 'Community Manager',
-      image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
-      bio: 'Dedicated to building donor relationships and awareness'
-    },
-    {
-      name: 'David Kim',
-      role: 'Technology Lead',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-      bio: 'Ensuring seamless digital experience for donors and recipients'
-    }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 to-white">
+    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50">
       <Header />
+
       {/* Hero Section */}
-      <section className="relative py-20 mt-20 bg-gradient-to-r from-red-600 to-red-700 text-white">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">
+      <section className="relative py-24 mt-10 bg-gradient-to-r from-red-600 to-red-800 text-white overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-8 left-8 w-40 h-40 rounded-full bg-white"></div>
+          <div className="absolute bottom-8 right-8 w-64 h-64 rounded-full bg-white"></div>
+          <div className="absolute top-1/2 left-1/2 w-20 h-20 rounded-full bg-white"></div>
+        </div>
+        <div className="relative max-w-4xl mx-auto px-4 text-center z-10">
+          <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <Heart className="w-8 h-8 text-white" />
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold mb-5">
             Saving Lives, One Drop at a Time
           </h1>
-          <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto opacity-90">
-            We are a dedicated platform connecting blood donors with those in need, 
-            making blood donation accessible, safe, and impactful.
+          <p className="text-lg md:text-xl text-red-100 max-w-3xl mx-auto leading-relaxed">
+            We are a dedicated digital platform connecting blood donors with hospitals and blood banks,
+            making blood donation accessible, safe, and impactful across India.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-white text-red-600 px-8 py-3 rounded-lg font-semibold hover:bg-red-50 transition-colors">
-              Join Our Mission
-            </button>
-            <button className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors">
-              Learn More
-            </button>
-          </div>
         </div>
       </section>
 
       {/* Stats Section */}
       <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <stat.icon className="w-8 h-8 text-red-600" />
+              <div key={index} className="text-center p-6 bg-red-50 rounded-2xl hover:bg-red-100 transition-all duration-300 group">
+                <div className="bg-red-100 group-hover:bg-red-200 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 transition-all duration-300">
+                  <stat.icon className="w-7 h-7 text-red-600" />
                 </div>
-                <div className="text-3xl font-bold text-gray-900 mb-2">{stat.number}</div>
-                <div className="text-gray-600">{stat.label}</div>
+                <div className="text-2xl md:text-3xl font-bold text-red-700 mb-1">{stat.number}</div>
+                <div className="text-gray-600 text-sm font-medium">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -116,44 +77,52 @@ const AboutUs = () => {
       </section>
 
       {/* Mission & Vision */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-20 bg-gradient-to-br from-slate-50 to-red-50">
+        <div className="max-w-6xl mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-4xl font-bold text-gray-900 mb-6">Our Mission</h2>
-              <p className="text-lg text-gray-700 mb-6">
-                To create a world where no one dies waiting for blood. We bridge the gap 
-                between voluntary blood donors and patients, ensuring timely access to 
-                safe blood when it's needed most.
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-red-100 text-red-700 rounded-full text-sm font-semibold mb-6">
+                <Heart className="w-4 h-4" /> Our Mission
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-5">
+                No one should die waiting for blood
+              </h2>
+              <p className="text-gray-600 mb-6 leading-relaxed text-lg">
+                We bridge the gap between voluntary blood donors and patients in need, ensuring
+                timely access to safe blood. Our platform digitizes the entire blood supply lifecycle —
+                from donor registration and inventory tracking to emergency hospital requests.
               </p>
-              <div className="space-y-4">
-                <div className="flex items-center">
-                  <Clock className="w-6 h-6 text-red-600 mr-3" />
-                  <span className="text-gray-700">24/7 Emergency Blood Availability</span>
-                </div>
-                <div className="flex items-center">
-                  <Shield className="w-6 h-6 text-red-600 mr-3" />
-                  <span className="text-gray-700">100% Safe & Verified Donors</span>
-                </div>
-                <div className="flex items-center">
-                  <MapPin className="w-6 h-6 text-red-600 mr-3" />
-                  <span className="text-gray-700">Nationwide Network Coverage</span>
-                </div>
+              <div className="space-y-3">
+                {[
+                  { icon: Clock, text: "24/7 Emergency Blood Request System" },
+                  { icon: Shield, text: "100% Verified Donors & Facilities" },
+                  { icon: MapPin, text: "Nationwide Network Coverage" },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center gap-3 bg-white rounded-xl px-4 py-3 shadow-sm border border-red-100">
+                    <item.icon className="w-5 h-5 text-red-600 flex-shrink-0" />
+                    <span className="text-gray-700 text-sm font-medium">{item.text}</span>
+                  </div>
+                ))}
               </div>
             </div>
-            <div className="bg-white p-8 rounded-2xl shadow-lg">
-              <h3 className="text-3xl font-bold text-gray-900 mb-6">Our Vision</h3>
-              <p className="text-lg text-gray-700 mb-6">
-                We envision a future where blood transfusion becomes a hassle-free process 
-                for every patient, supported by a robust network of committed donors and 
-                advanced technology.
+
+            <div className="bg-white p-8 rounded-2xl shadow-xl border border-red-100">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-red-100 text-red-700 rounded-full text-sm font-semibold mb-6">
+                <Target className="w-4 h-4" /> Our Vision
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">A future without blood shortages</h3>
+              <p className="text-gray-600 mb-6 leading-relaxed">
+                We envision a future where blood transfusion is a seamless, instant process — supported
+                by a vast network of committed donors, technologically empowered hospitals, and
+                data-driven blood laboratories working in perfect coordination.
               </p>
-              <div className="bg-red-50 p-6 rounded-lg">
-                <Award className="w-12 h-12 text-red-600 mb-4" />
-                <h4 className="text-xl font-semibold text-gray-900 mb-2">Quality Promise</h4>
-                <p className="text-gray-700">
-                  Every unit of blood goes through 12 rigorous quality checks to ensure 
-                  maximum safety for both donors and recipients.
+              <div className="bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-xl border border-red-200">
+                <Award className="w-10 h-10 text-red-600 mb-3" />
+                <h4 className="text-lg font-bold text-gray-900 mb-2">Quality Promise</h4>
+                <p className="text-gray-700 text-sm leading-relaxed">
+                  Every unit of blood tracked through our system goes through rigorous quality checks
+                  with expiry monitoring and donor eligibility verification ensuring maximum safety for
+                  both donors and recipients.
                 </p>
               </div>
             </div>
@@ -163,104 +132,27 @@ const AboutUs = () => {
 
       {/* Values Section */}
       <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Values</h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              These core principles guide everything we do and define who we are
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-14">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Core Values</h2>
+            <p className="text-gray-500 text-lg max-w-2xl mx-auto">
+              These principles guide every decision we make and define who we are as a platform.
             </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-7">
             {values.map((value, index) => (
-              <div key={index} className="text-center group hover:transform hover:scale-105 transition-all duration-300">
-                <div className="bg-red-100 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-red-200 transition-colors">
-                  <value.icon className="w-10 h-10 text-red-600" />
+              <div key={index} className="text-center group p-7 bg-red-50 rounded-2xl hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-transparent hover:border-red-100">
+                <div className="bg-red-100 group-hover:bg-red-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5 transition-all duration-300">
+                  <value.icon className="w-8 h-8 text-red-600 group-hover:text-white transition-all duration-300" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">{value.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{value.description}</p>
+                <h3 className="text-lg font-bold text-gray-900 mb-3">{value.title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">{value.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Team Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Meet Our Team</h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Passionate professionals dedicated to making a difference in healthcare
-            </p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {team.map((member, index) => (
-              <div key={index} className="bg-white rounded-2xl shadow-lg overflow-hidden group hover:shadow-xl transition-all duration-300">
-                <div className="h-48 bg-gradient-to-r from-red-400 to-red-600 relative overflow-hidden">
-                  <img 
-                    src={member.image} 
-                    alt={member.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-1">{member.name}</h3>
-                  <p className="text-red-600 font-medium mb-3">{member.role}</p>
-                  <p className="text-gray-600 text-sm">{member.bio}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-red-600 to-red-700 text-white">
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold mb-6">Ready to Make a Difference?</h2>
-          <p className="text-xl mb-8 opacity-90">
-            Join thousands of heroes who are saving lives through blood donation. 
-            Your single donation can save up to 3 lives.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-white text-red-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-red-50 transition-colors">
-              Become a Donor
-            </button>
-            <button className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white/10 transition-colors">
-              Organize a Camp
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <Phone className="w-8 h-8 text-red-600 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Emergency Helpline</h3>
-              <p className="text-gray-600">+1 (555) 123-HELP</p>
-              <p className="text-gray-600">24/7 Available</p>
-            </div>
-            <div className="text-center">
-              <Mail className="w-8 h-8 text-red-600 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Email Us</h3>
-              <p className="text-gray-600">help@bloodconnect.org</p>
-              <p className="text-gray-600">support@bloodconnect.org</p>
-            </div>
-            <div className="text-center">
-              <Globe className="w-8 h-8 text-red-600 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Headquarters</h3>
-              <p className="text-gray-600">123 Healthcare Ave</p>
-              <p className="text-gray-600">Medical District, City 12345</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
       <Footer />
     </div>
   );

@@ -87,13 +87,14 @@ export default function Header({ currentUser }) {
                 key={link.name}
                 to={link.path}
                 className={`relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                  isActiveLink(link.path)
+                  link.isAdmin
+                    ? "text-red-600 border border-red-300 hover:bg-red-600 hover:text-white hover:border-red-600"
+                    : isActiveLink(link.path)
                     ? "text-red-700 bg-red-50"
                     : "text-gray-700 hover:text-red-600 hover:bg-gray-50"
                 }`}
               >
                 {link.name}
-                
               </Link>
             ))}
             

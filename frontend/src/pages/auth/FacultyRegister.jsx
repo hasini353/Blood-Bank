@@ -1,886 +1,419 @@
 "use client";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { Eye, EyeOff, Building2, Mail, Lock, Phone, MapPin, Clock, FlaskConical } from "lucide-react";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
 
-// Constants for better maintainability
 const FACILITY_TYPES = ["Hospital", "Blood Lab"];
-const FACILITY_CATEGORIES = [
-  "Government",
-  "Private",
-  "Trust",
-  "Charity",
-  "Other",
-];
-
+const FACILITY_CATEGORIES = ["Government", "Private", "Trust", "Charity", "Other"];
 const STATES = {
-  Maharashtra: ["Mumbai", "Pune", "Nagpur"],
-  Karnataka: ["Bengaluru", "Mysore", "Mangalore"],
-  Delhi: ["New Delhi", "Dwarka", "Rohini"],
-  "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai"],
+  "Andhra Pradesh": ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore", "Kurnool", "Rajahmundry", "Tirupati", "Kakinada", "Kadapa", "Anantapur"],
+  "Arunachal Pradesh": ["Itanagar", "Naharlagun", "Pasighat", "Tawang", "Ziro"],
+  "Assam": ["Guwahati", "Silchar", "Dibrugarh", "Jorhat", "Nagaon", "Tinsukia", "Tezpur"],
+  "Bihar": ["Patna", "Gaya", "Bhagalpur", "Muzaffarpur", "Purnia", "Darbhanga", "Bihar Sharif"],
+  "Chhattisgarh": ["Raipur", "Bhilai", "Bilaspur", "Korba", "Durg", "Rajnandgaon"],
+  "Goa": ["Panaji", "Vasco da Gama", "Margao", "Mapusa", "Ponda"],
+  "Gujarat": ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Gandhinagar", "Bhavnagar", "Jamnagar", "Anand", "Junagadh"],
+  "Haryana": ["Chandigarh", "Faridabad", "Gurugram", "Ambala", "Rohtak", "Hisar", "Panipat", "Sonipat"],
+  "Himachal Pradesh": ["Shimla", "Dharamshala", "Solan", "Mandi", "Kullu", "Manali", "Baddi"],
+  "Jharkhand": ["Ranchi", "Jamshedpur", "Dhanbad", "Bokaro", "Deoghar", "Hazaribagh"],
+  "Karnataka": ["Bengaluru", "Mysuru", "Mangalore", "Hubli", "Belgaum", "Dharwad", "Gulbarga", "Shimoga", "Tumkur"],
+  "Kerala": ["Thiruvananthapuram", "Kochi", "Kozhikode", "Kollam", "Thrissur", "Palakkad", "Alappuzha", "Malappuram"],
+  "Madhya Pradesh": ["Bhopal", "Indore", "Jabalpur", "Gwalior", "Ujjain", "Sagar", "Rewa", "Satna"],
+  "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Thane", "Nashik", "Aurangabad", "Solapur", "Kolhapur", "Amravati", "Navi Mumbai"],
+  "Manipur": ["Imphal", "Bishnupur", "Thoubal", "Churachandpur"],
+  "Meghalaya": ["Shillong", "Tura", "Nongstoin"],
+  "Mizoram": ["Aizawl", "Lunglei", "Champhai"],
+  "Nagaland": ["Kohima", "Dimapur", "Mokokchung"],
+  "Odisha": ["Bhubaneswar", "Cuttack", "Rourkela", "Brahmapur", "Sambalpur", "Puri", "Balasore"],
+  "Punjab": ["Chandigarh", "Ludhiana", "Amritsar", "Jalandhar", "Patiala", "Bathinda", "Mohali"],
+  "Rajasthan": ["Jaipur", "Jodhpur", "Udaipur", "Kota", "Ajmer", "Bikaner", "Alwar", "Bharatpur"],
+  "Sikkim": ["Gangtok", "Namchi", "Geyzing"],
+  "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem", "Tirunelveli", "Erode", "Vellore", "Thoothukudi"],
+  "Telangana": ["Hyderabad", "Warangal", "Nizamabad", "Karimnagar", "Khammam", "Ramagundam", "Nalgonda"],
+  "Tripura": ["Agartala", "Udaipur", "Dharmanagar"],
+  "Uttar Pradesh": ["Lucknow", "Kanpur", "Agra", "Varanasi", "Meerut", "Allahabad", "Ghaziabad", "Noida", "Bareilly", "Aligarh", "Moradabad"],
+  "Uttarakhand": ["Dehradun", "Haridwar", "Roorkee", "Haldwani", "Nainital", "Rishikesh"],
+  "West Bengal": ["Kolkata", "Howrah", "Durgapur", "Asansol", "Siliguri", "Bardhaman", "Malda"],
+  // Union Territories
+  "Andaman & Nicobar Islands": ["Port Blair", "Diglipur", "Rangat"],
+  "Chandigarh": ["Chandigarh"],
+  "Dadra & Nagar Haveli and Daman & Diu": ["Daman", "Diu", "Silvassa"],
+  "Delhi": ["New Delhi", "Rohini", "Dwarka", "Saket", "Karol Bagh", "Lajpat Nagar", "Janakpuri"],
+  "Jammu & Kashmir": ["Srinagar", "Jammu", "Sopore", "Anantnag", "Baramulla"],
+  "Ladakh": ["Leh", "Kargil"],
+  "Lakshadweep": ["Kavaratti", "Agatti"],
+  "Puducherry": ["Puducherry", "Karaikal", "Mahe", "Yanam"],
 };
-
 const WORKING_DAYS = [
-  { value: "Mon", label: "Monday" },
-  { value: "Tue", label: "Tuesday" },
-  { value: "Wed", label: "Wednesday" },
-  { value: "Thu", label: "Thursday" },
-  { value: "Fri", label: "Friday" },
-  { value: "Sat", label: "Saturday" },
-  { value: "Sun", label: "Sunday" },
+  { value: "Mon", label: "Mon" },
+  { value: "Tue", label: "Tue" },
+  { value: "Wed", label: "Wed" },
+  { value: "Thu", label: "Thu" },
+  { value: "Fri", label: "Fri" },
+  { value: "Sat", label: "Sat" },
+  { value: "Sun", label: "Sun" },
 ];
 
-// Validation functions
-const validators = {
-  name: (value) => (!value.trim() ? "Facility name is required" : ""),
-  email: (value) => {
-    if (!value.trim()) return "Email is required";
-    if (!/^\S+@\S+\.\S+$/.test(value))
-      return "Please enter a valid email address";
-    return "";
-  },
-  password: (value) => {
-    if (!value) return "Password is required";
-    if (value.length < 6) return "Password must be at least 6 characters";
-    return "";
-  },
-  phone: (value) => {
-    if (!value) return "Phone number is required";
-    if (value.length !== 10) return "Phone number must be exactly 10 digits";
-    if (!/^[6-9][0-9]{9}$/.test(value))
-      return "Phone number must start with 6-9";
-    return "";
-  },
-  emergencyContact: (value) => {
-    if (!value) return "Emergency contact is required";
-    if (value.length !== 10)
-      return "Emergency contact must be exactly 10 digits";
-    if (!/^[6-9][0-9]{9}$/.test(value))
-      return "Emergency contact must start with 6-9";
-    return "";
-  },
-  registrationNumber: (value) =>
-    !value.trim() ? "Registration number is required" : "",
-  "address.street": (value) =>
-    !value.trim() ? "Street address is required" : "",
-  "address.city": (value) => (!value.trim() ? "City is required" : ""),
-  "address.state": (value) => (!value.trim() ? "State is required" : ""),
-  "address.pincode": (value) => {
-    if (!value) return "Pincode is required";
-    if (!/^[1-9][0-9]{5}$/.test(value)) return "Pincode must be 6 digits";
-    return "";
-  },
-  "documents.registrationProof.url": (value) =>
-    !value.trim() ? "Document URL is required" : "",
-};
+const InputField = ({ label, icon: Icon, error, required, children, hint }) => (
+  <div>
+    <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+      {label} {required && <span className="text-red-500">*</span>}
+    </label>
+    <div className={`relative flex items-center border rounded-xl transition-all ${error ? "border-red-400 bg-red-50" : "border-gray-200 bg-gray-50 focus-within:bg-white focus-within:border-red-400"}`}>
+      {Icon && <Icon className="absolute left-3 w-4 h-4 text-red-400 pointer-events-none" />}
+      {children}
+    </div>
+    {hint && !error && <p className="text-xs text-gray-400 mt-1">{hint}</p>}
+    {error && <p className="text-xs text-red-500 mt-1 flex items-center gap-1">⚠ {error}</p>}
+  </div>
+);
 
 export default function FacilityRegisterForm() {
   const navigate = useNavigate();
-  const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    phone: "",
-    emergencyContact: "",
-    address: { street: "", city: "", state: "", pincode: "" },
-    registrationNumber: "",
-    facilityType: "Hospital",
-    facilityCategory: "Private",
-    documents: { registrationProof: { url: "", filename: "" } },
-    operatingHours: {
-      open: "09:00",
-      close: "18:00",
-      workingDays: ["Mon", "Tue", "Wed", "Thu", "Fri"],
-    },
-    is24x7: false,
-    emergencyServices: false,
-  });
-
-  const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [touched, setTouched] = useState({});
+  const [errors, setErrors] = useState({});
+  const [formData, setFormData] = useState({
+    name: "", email: "", password: "", phone: "", emergencyContact: "",
+    facilityType: "Hospital", facilityCategory: "Private",
+    address: { street: "", city: "", state: "", pincode: "" },
+    operatingHours: { open: "", close: "", workingDays: [] },
+    is24x7: false, emergencyServices: false,
+  });
 
-  // Handle form field changes
+  const validate = () => {
+    const e = {};
+    if (!formData.name.trim()) e.name = "Facility name is required";
+    if (!formData.email.trim()) e.email = "Email is required";
+    else if (!/^\S+@\S+\.\S+$/.test(formData.email)) e.email = "Invalid email address";
+    if (!formData.password) e.password = "Password is required";
+    else if (formData.password.length < 6) e.password = "Minimum 6 characters";
+    if (!formData.phone) e.phone = "Phone is required";
+    else if (!/^\d{10}$/.test(formData.phone)) e.phone = "Must be exactly 10 digits";
+    if (!formData.emergencyContact) e.emergencyContact = "Emergency contact is required";
+    else if (!/^\d{10}$/.test(formData.emergencyContact)) e.emergencyContact = "Must be exactly 10 digits";
+    if (!formData.address.street.trim()) e["address.street"] = "Street address is required";
+    if (!formData.address.state) e["address.state"] = "State is required";
+    if (!formData.address.city) e["address.city"] = "City is required";
+    if (!formData.address.pincode) e["address.pincode"] = "Pincode is required";
+    else if (!/^[1-9][0-9]{5}$/.test(formData.address.pincode)) e["address.pincode"] = "Invalid 6-digit pincode";
+    return e;
+  };
+
+  // Generic field change handler
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-
     setFormData((prev) => {
-      // Handle nested objects
       if (name.startsWith("address.")) {
-        const field = name.split(".")[1];
-        return {
-          ...prev,
-          address: { ...prev.address, [field]: value },
-        };
-      } else if (name.startsWith("documents.registrationProof.")) {
-        const field = name.split(".")[2];
-        return {
-          ...prev,
-          documents: {
-            registrationProof: {
-              ...prev.documents.registrationProof,
-              [field]: value,
-            },
-          },
-        };
-      } else if (name.startsWith("operatingHours.")) {
-        const field = name.split(".")[1];
-        if (field === "workingDays") {
-          const options = Array.from(e.target.selectedOptions).map(
-            (o) => o.value,
-          );
-          return {
-            ...prev,
-            operatingHours: { ...prev.operatingHours, workingDays: options },
-          };
-        }
-        return {
-          ...prev,
-          operatingHours: { ...prev.operatingHours, [field]: value },
-        };
+        const field = name.slice("address.".length);
+        return { ...prev, address: { ...prev.address, [field]: value } };
       }
-
-      // Handle regular fields
-      return {
-        ...prev,
-        [name]: type === "checkbox" ? checked : value,
-      };
+      if (name === "operatingHours.open") {
+        return { ...prev, operatingHours: { ...prev.operatingHours, open: value } };
+      }
+      if (name === "operatingHours.close") {
+        return { ...prev, operatingHours: { ...prev.operatingHours, close: value } };
+      }
+      return { ...prev, [name]: type === "checkbox" ? checked : value };
     });
-
-    // Mark field as touched
-    setTouched((prev) => ({ ...prev, [name]: true }));
-
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors((prev) => {
-        const newErrors = { ...prev };
-        delete newErrors[name];
-        return newErrors;
-      });
-    }
+    if (errors[name]) setErrors((prev) => { const n = { ...prev }; delete n[name]; return n; });
   };
 
-  // Handle blur events for validation
-  const handleBlur = (e) => {
-    const { name } = e.target;
-    setTouched((prev) => ({ ...prev, [name]: true }));
-
-    // Validate single field
-    validateField(name);
+  // State change — also resets city in same setState call (no race condition)
+  const handleStateChange = (e) => {
+    const state = e.target.value;
+    setFormData((prev) => ({ ...prev, address: { ...prev.address, state, city: "" } }));
+    if (errors["address.state"]) setErrors((prev) => { const n = { ...prev }; delete n["address.state"]; return n; });
   };
 
-  // Validate single field
-  const validateField = (fieldName) => {
-    let value;
-
-    if (fieldName.includes(".")) {
-      const [parent, child] = fieldName.split(".");
-      if (parent === "address") {
-        value = formData.address[child];
-      } else if (fieldName.startsWith("documents.")) {
-        value = formData.documents.registrationProof.url;
-      }
-    } else {
-      value = formData[fieldName];
-    }
-
-    const error = validators[fieldName]?.(value);
-
-    setErrors((prev) => {
-      if (error) {
-        return { ...prev, [fieldName]: error };
-      } else {
-        const newErrors = { ...prev };
-        delete newErrors[fieldName];
-        return newErrors;
-      }
+  const toggleWorkingDay = (day) => {
+    setFormData((prev) => {
+      const days = prev.operatingHours.workingDays;
+      const updated = days.includes(day) ? days.filter((d) => d !== day) : [...days, day];
+      return { ...prev, operatingHours: { ...prev.operatingHours, workingDays: updated } };
     });
   };
 
-  // Validate current step
-  const validateStep = () => {
-    const newErrors = {};
-
-    const stepValidations = {
-      1: ["name", "email"],
-      2: ["password", "facilityType"],
-      3: [
-        "phone",
-        "emergencyContact",
-        "registrationNumber",
-        "address.street",
-        "address.city",
-        "address.state",
-        "address.pincode",
-        "documents.registrationProof.url",
-      ],
-    };
-
-    stepValidations[step].forEach((field) => {
-      let value;
-
-      if (field.includes(".")) {
-        const [parent, child] = field.split(".");
-        if (parent === "address") {
-          value = formData.address[child];
-        } else if (field.startsWith("documents.")) {
-          value = formData.documents.registrationProof.url;
-        }
-      } else {
-        value = formData[field];
-      }
-
-      const error = validators[field]?.(value);
-      if (error) newErrors[field] = error;
-    });
-
-    setErrors(newErrors);
-
-    // Mark all step fields as touched to show errors
-    const newTouched = { ...touched };
-    stepValidations[step].forEach((field) => {
-      newTouched[field] = true;
-    });
-    setTouched(newTouched);
-
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleNext = () => {
-    if (validateStep()) {
-      setStep(step + 1);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      // Scroll to first error
-      const firstErrorField = Object.keys(errors)[0];
-      const element = document.querySelector(`[name="${firstErrorField}"]`);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "center" });
-        element.focus();
-      }
-    }
-  };
-
-  const handleBack = () => {
-    setStep(step - 1);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  // Fixes were already here, but check again for clarity:
   const handleSubmit = async (e) => {
-    // If 'e' is provided (from form onSubmit or button click), prevent default
-    // In this setup, it's safer to check for a method that may exist.
-    if (e && typeof e.preventDefault === "function") {
-      e.preventDefault();
-    }
-
-    // Ensure validation runs before proceeding to API call
-    if (!validateStep()) {
-      console.log("Validation failed on step 3. Data not submitted.");
-      // Stop execution if validation fails
+    e.preventDefault();
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      // Scroll to first error
+      const firstKey = Object.keys(validationErrors)[0];
+      const el = document.querySelector(`[name="${firstKey}"]`);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
-
     setIsSubmitting(true);
-
-    // 1. Get the raw facilityType string (e.g., "Blood Lab")
-    const rawFacilityType = formData.facilityType;
-
-    // 2. Create the required role slug (e.g., "blood lab" -> "blood-lab")
-    const roleSlug = rawFacilityType.toLowerCase().replace(" ", "-");
-
-    // 3. Construct the submission payload
-    const submissionPayload = {
-      ...formData,
-
-      // IMPORTANT: Keep the facilityType field as the original capitalized value.
-      facilityType: roleSlug,
-
-      // Set the role field to the required slug format.
-      role: roleSlug,
-    };
-
-    // **YOUR TARGET URL**
-    const API_URL = `${import.meta.env.VITE_API_URL || ""}/api/auth/register`;
-
-    console.log("Submitting Data to Backend:", submissionPayload); // Use the new payload
-
+    const roleSlug = formData.facilityType === "Blood Lab" ? "blood-lab" : "hospital";
+    const payload = { ...formData, facilityType: roleSlug, role: roleSlug };
     try {
-      const response = await fetch(API_URL, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/auth/register`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        // ⭐️ Use the constructed payload here
-        body: JSON.stringify(submissionPayload),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       });
-
-      // Check if the response status is 2xx (Success)
-      if (response.ok) {
-        const result = await response.json();
-        console.log("Facility Data Registered Successfully:", result);
-        toast("✅ Facility Registered Successfully!");
-        // You might want to clear the form or redirect here
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("✅ Facility Registered! Awaiting admin verification.");
         navigate("/");
       } else {
-        // Handle server-side errors (400, 500 status codes)
-        const errorData = await response.json();
-        console.error("Registration failed:", response.status, errorData);
-        alert(
-          `❌ Registration failed. Status: ${response.status}. Message: ${errorData.message || "Check server logs."}`,
-        );
+        toast.error(`Registration failed: ${data.message || data.error || "Please try again."}`);
       }
-    } catch (error) {
-      // Handle network errors (e.g., server unreachable)
-      console.error("Network or fetch error:", error);
-      alert(
-        "❌ Registration failed due to a network error. Ensure the backend is running.",
-      );
+    } catch {
+      toast.error("❌ Network error. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Helper to check if field should show error
-  const shouldShowError = (fieldName) => {
-    return touched[fieldName] && errors[fieldName];
-  };
-
-  const progressPercentage = (step / 3) * 100;
+  const inputCls = (name) =>
+    `w-full pl-10 pr-4 py-3 bg-transparent outline-none text-sm rounded-xl ${errors[name] ? "text-red-700" : "text-gray-800"}`;
 
   return (
-    <div className="min-h-screen bg-red-50 flex items-center justify-center py-8 px-4">
-      <div className="w-full max-w-3xl bg-white rounded-xl shadow-lg overflow-hidden">
-        {/* Header Section */}
-        <div className="bg-red-700 text-white p-6">
-          <h1 className="text-2xl font-bold text-center mb-2">
-            Blood Facility Registration
-          </h1>
-          <p className="text-center mb-4 opacity-90">
-            Register your facility in 3 simple steps
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-100">
+      <Header />
 
-          {/* Progress Bar */}
-          <div className="mb-2 flex justify-between items-center text-sm">
-            <span>Step {step} of 3</span>
-            <span>{progressPercentage.toFixed(0)}% Complete</span>
+      <div className="max-w-3xl mx-auto px-4 py-24">
+        {/* Page Header */}
+        <div className="text-center mb-10">
+          <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-red-700 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+            <FlaskConical className="w-8 h-8 text-white" />
           </div>
-          <div className="w-full bg-red-300 rounded-full h-2.5">
-            <div
-              className="bg-white h-2.5 rounded-full transition-all duration-300"
-              style={{ width: `${progressPercentage}%` }}
-            ></div>
-          </div>
-          <div className="flex justify-between mt-2 text-sm">
-            <span className={step >= 1 ? "font-semibold" : "opacity-75"}>
-              Basic Info
-            </span>
-            <span className={step >= 2 ? "font-semibold" : "opacity-75"}>
-              Account
-            </span>
-            <span className={step >= 3 ? "font-semibold" : "opacity-75"}>
-              Details
-            </span>
-          </div>
+          <h1 className="text-3xl font-bold text-gray-900">Facility Registration</h1>
+          <p className="text-gray-500 mt-2">Register your hospital or blood lab to join our network.</p>
         </div>
 
-        {/* Form Section */}
-        <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-6">
-          {/* Step 1: Basic Information */}
-          {step === 1 && (
-            <div className="space-y-6">
+        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-xl border border-red-100 overflow-hidden">
+
+          {/* Section: Facility Info */}
+          <div className="bg-gradient-to-r from-red-600 to-red-700 px-8 py-4">
+            <h2 className="text-white font-semibold text-sm uppercase tracking-wider">Facility Information</h2>
+          </div>
+          <div className="p-8 space-y-5">
+            <InputField label="Facility Name" icon={Building2} error={errors.name} required>
+              <input name="name" type="text" placeholder="Enter facility name" value={formData.name} onChange={handleChange} className={inputCls("name")} />
+            </InputField>
+
+            <div className="grid md:grid-cols-2 gap-5">
               <div>
-                <label htmlFor="name" className="block font-medium mb-2">
-                  Facility Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  id="name"
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition ${
-                    shouldShowError("name")
-                      ? "border-red-500"
-                      : "border-gray-300"
-                  }`}
-                  placeholder="Enter facility name"
-                />
-                {shouldShowError("name") && (
-                  <p className="text-red-500 text-sm mt-1 flex items-center">
-                    <span className="mr-1">⚠</span> {errors.name}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label htmlFor="email" className="block font-medium mb-2">
-                  Email <span className="text-red-500">*</span>
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition ${
-                    shouldShowError("email")
-                      ? "border-red-500"
-                      : "border-gray-300"
-                  }`}
-                  placeholder="Enter email address"
-                />
-                {shouldShowError("email") && (
-                  <p className="text-red-500 text-sm mt-1 flex items-center">
-                    <span className="mr-1">⚠</span> {errors.email}
-                  </p>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Step 2: Account Information */}
-          {step === 2 && (
-            <div className="space-y-6">
-              <div>
-                <label htmlFor="password" className="block font-medium mb-2">
-                  Password <span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition ${
-                      shouldShowError("password")
-                        ? "border-red-500"
-                        : "border-gray-300"
-                    }`}
-                    placeholder="Enter password (min 6 characters)"
-                  />
-                  <button
-                    type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                    onClick={() => setShowPassword(!showPassword)}
-                    aria-label={
-                      showPassword ? "Hide password" : "Show password"
-                    }
-                  >
-                    {showPassword ? "🙈" : "👁"}
-                  </button>
-                </div>
-                {shouldShowError("password") && (
-                  <p className="text-red-500 text-sm mt-1 flex items-center">
-                    <span className="mr-1">⚠</span> {errors.password}
-                  </p>
-                )}
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label
-                    htmlFor="facilityType"
-                    className="block font-medium mb-2"
-                  >
-                    Facility Type <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    id="facilityType"
-                    name="facilityType"
-                    value={formData.facilityType}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition"
-                  >
-                    {FACILITY_TYPES.map((ft) => (
-                      <option key={ft} value={ft}>
-                        {ft}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="facilityCategory"
-                    className="block font-medium mb-2"
-                  >
-                    Facility Category
-                  </label>
-                  <select
-                    id="facilityCategory"
-                    name="facilityCategory"
-                    value={formData.facilityCategory}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition"
-                  >
-                    {FACILITY_CATEGORIES.map((fc) => (
-                      <option key={fc} value={fc}>
-                        {fc}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Step 3: Facility Details */}
-          {step === 3 && (
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="phone" className="block font-medium mb-2">
-                    Phone <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    id="phone"
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition ${
-                      shouldShowError("phone")
-                        ? "border-red-500"
-                        : "border-gray-300"
-                    }`}
-                    placeholder="10-digit phone number"
-                    maxLength="10"
-                  />
-                  {shouldShowError("phone") && (
-                    <p className="text-red-500 text-sm mt-1 flex items-center">
-                      <span className="mr-1">⚠</span> {errors.phone}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="emergencyContact"
-                    className="block font-medium mb-2"
-                  >
-                    Emergency Contact <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    id="emergencyContact"
-                    type="tel"
-                    name="emergencyContact"
-                    value={formData.emergencyContact}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition ${
-                      shouldShowError("emergencyContact")
-                        ? "border-red-500"
-                        : "border-gray-300"
-                    }`}
-                    placeholder="10-digit emergency contact"
-                    maxLength="10"
-                  />
-                  {shouldShowError("emergencyContact") && (
-                    <p className="text-red-500 text-sm mt-1 flex items-center">
-                      <span className="mr-1">⚠</span> {errors.emergencyContact}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Address Section */}
-              <div className="space-y-4">
-                <label className="block font-medium mb-2">
-                  Address <span className="text-red-500">*</span>
-                </label>
-
-                <input
-                  type="text"
-                  name="address.street"
-                  placeholder="Street Address"
-                  value={formData.address.street}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition ${
-                    shouldShowError("address.street")
-                      ? "border-red-500"
-                      : "border-gray-300"
-                  }`}
-                />
-                {shouldShowError("address.street") && (
-                  <p className="text-red-500 text-sm mt-1 flex items-center">
-                    <span className="mr-1">⚠</span> {errors["address.street"]}
-                  </p>
-                )}
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <div>
-                    <select
-                      name="address.state"
-                      value={formData.address.state}
-                      onChange={(e) => {
-                        handleChange(e);
-                        setFormData((prev) => ({
-                          ...prev,
-                          address: { ...prev.address, city: "" },
-                        }));
-                      }}
-                      onBlur={handleBlur}
-                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition ${
-                        shouldShowError("address.state")
-                          ? "border-red-500"
-                          : "border-gray-300"
-                      }`}
-                    >
-                      <option value="">Select State</option>
-                      {Object.keys(STATES).map((state) => (
-                        <option key={state} value={state}>
-                          {state}
-                        </option>
-                      ))}
-                    </select>
-                    {shouldShowError("address.state") && (
-                      <p className="text-red-500 text-sm mt-1 flex items-center">
-                        <span className="mr-1">⚠</span>{" "}
-                        {errors["address.state"]}
-                      </p>
-                    )}
-                  </div>
-
-                  <div>
-                    <select
-                      name="address.city"
-                      value={formData.address.city}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition ${
-                        shouldShowError("address.city")
-                          ? "border-red-500"
-                          : "border-gray-300"
-                      }`}
-                      disabled={!formData.address.state}
-                    >
-                      <option value="">Select City</option>
-                      {formData.address.state &&
-                        STATES[formData.address.state].map((city) => (
-                          <option key={city} value={city}>
-                            {city}
-                          </option>
-                        ))}
-                    </select>
-                    {shouldShowError("address.city") && (
-                      <p className="text-red-500 text-sm mt-1 flex items-center">
-                        <span className="mr-1">⚠</span> {errors["address.city"]}
-                      </p>
-                    )}
-                  </div>
-
-                  <div>
-                    <input
-                      type="text"
-                      name="address.pincode"
-                      placeholder="Pincode"
-                      value={formData.address.pincode}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition ${
-                        shouldShowError("address.pincode")
-                          ? "border-red-500"
-                          : "border-gray-300"
-                      }`}
-                      maxLength="6"
-                    />
-                    {shouldShowError("address.pincode") && (
-                      <p className="text-red-500 text-sm mt-1 flex items-center">
-                        <span className="mr-1">⚠</span>{" "}
-                        {errors["address.pincode"]}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="registrationNumber"
-                  className="block font-medium mb-2"
-                >
-                  Registration Number <span className="text-red-500">*</span>
-                </label>
-                <input
-                  id="registrationNumber"
-                  type="text"
-                  name="registrationNumber"
-                  value={formData.registrationNumber}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition ${
-                    shouldShowError("registrationNumber")
-                      ? "border-red-500"
-                      : "border-gray-300"
-                  }`}
-                  placeholder="Enter registration number"
-                />
-                {shouldShowError("registrationNumber") && (
-                  <p className="text-red-500 text-sm mt-1 flex items-center">
-                    <span className="mr-1">⚠</span> {errors.registrationNumber}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label htmlFor="documentUrl" className="block font-medium mb-2">
-                  Registration Proof URL <span className="text-red-500">*</span>
-                </label>
-                <input
-                  id="documentUrl"
-                  type="url"
-                  name="documents.registrationProof.url"
-                  value={formData.documents.registrationProof.url}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition ${
-                    shouldShowError("documents.registrationProof.url")
-                      ? "border-red-500"
-                      : "border-gray-300"
-                  }`}
-                  placeholder="https://example.com/document.pdf"
-                />
-                {shouldShowError("documents.registrationProof.url") && (
-                  <p className="text-red-500 text-sm mt-1 flex items-center">
-                    <span className="mr-1">⚠</span>{" "}
-                    {errors["documents.registrationProof.url"]}
-                  </p>
-                )}
-              </div>
-
-              {/* Operating Hours */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="openTime" className="block font-medium mb-2">
-                    Opening Time
-                  </label>
-                  <input
-                    id="openTime"
-                    type="time"
-                    name="operatingHours.open"
-                    value={formData.operatingHours.open}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="closeTime" className="block font-medium mb-2">
-                    Closing Time
-                  </label>
-                  <input
-                    id="closeTime"
-                    type="time"
-                    name="operatingHours.close"
-                    value={formData.operatingHours.close}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="workingDays" className="block font-medium mb-2">
-                  Working Days
-                </label>
-                <select
-                  id="workingDays"
-                  name="operatingHours.workingDays"
-                  multiple
-                  value={formData.operatingHours.workingDays}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition h-32"
-                  size={5}
-                >
-                  {WORKING_DAYS.map((day) => (
-                    <option key={day.value} value={day.value}>
-                      {day.label}
-                    </option>
-                  ))}
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Facility Type <span className="text-red-500">*</span></label>
+                <select name="facilityType" value={formData.facilityType} onChange={handleChange} className="w-full px-4 py-3 border border-gray-200 bg-gray-50 focus:bg-white focus:border-red-400 rounded-xl outline-none text-sm text-gray-800 transition">
+                  {FACILITY_TYPES.map((ft) => <option key={ft} value={ft}>{ft}</option>)}
                 </select>
-                <p className="text-sm text-gray-500 mt-1">
-                  Hold Ctrl/Cmd to select multiple days
-                </p>
               </div>
-
-              {/* Service Options */}
-              <div className="flex flex-wrap gap-6">
-                <label className="flex items-center space-x-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    name="is24x7"
-                    checked={formData.is24x7}
-                    onChange={handleChange}
-                    className="w-4 h-4 accent-red-500"
-                  />
-                  <span className="font-medium">24x7 Service</span>
-                </label>
-                <label className="flex items-center space-x-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    name="emergencyServices"
-                    checked={formData.emergencyServices}
-                    onChange={handleChange}
-                    className="w-4 h-4 accent-red-500"
-                  />
-                  <span className="font-medium">Emergency Services</span>
-                </label>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Facility Category</label>
+                <select name="facilityCategory" value={formData.facilityCategory} onChange={handleChange} className="w-full px-4 py-3 border border-gray-200 bg-gray-50 focus:bg-white focus:border-red-400 rounded-xl outline-none text-sm text-gray-800 transition">
+                  {FACILITY_CATEGORIES.map((fc) => <option key={fc} value={fc}>{fc}</option>)}
+                </select>
               </div>
             </div>
-          )}
 
-          {/* Navigation Buttons */}
-          <div
-            className={`flex ${step > 1 ? "justify-between" : "justify-end"} pt-6 border-t`}
-          >
-            {step > 1 && (
-              <button
-                type="button"
-                onClick={handleBack}
-                className="px-6 py-2.5 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 transition font-medium"
-                disabled={isSubmitting}
-              >
-                Back
+            <div className="flex gap-6">
+              <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-700">
+                <input type="checkbox" name="emergencyServices" checked={formData.emergencyServices} onChange={handleChange} className="w-4 h-4 accent-red-500" />
+                Emergency Services Available
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-700">
+                <input type="checkbox" name="is24x7" checked={formData.is24x7} onChange={handleChange} className="w-4 h-4 accent-red-500" />
+                Open 24×7
+              </label>
+            </div>
+          </div>
+
+          {/* Section: Account */}
+          <div className="bg-gradient-to-r from-red-600 to-red-700 px-8 py-4">
+            <h2 className="text-white font-semibold text-sm uppercase tracking-wider">Account & Contact</h2>
+          </div>
+          <div className="p-8 space-y-5">
+            <InputField label="Email Address" icon={Mail} error={errors.email} required>
+              <input name="email" type="email" placeholder="Facility email address" value={formData.email} onChange={handleChange} className={inputCls("email")} />
+            </InputField>
+
+            <InputField label="Password" icon={Lock} error={errors.password} required hint="Minimum 6 characters">
+              <input name="password" type={showPassword ? "text" : "password"} placeholder="Create a password" value={formData.password} onChange={handleChange} className={`${inputCls("password")} pr-10`} />
+              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 text-gray-400 hover:text-red-500 transition">
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
+            </InputField>
+
+            <div className="grid md:grid-cols-2 gap-5">
+              <InputField label="Phone Number" icon={Phone} error={errors.phone} required hint="10-digit number">
+                <input name="phone" type="tel" placeholder="Facility phone number" value={formData.phone} onChange={handleChange} maxLength="10" className={inputCls("phone")} />
+              </InputField>
+              <InputField label="Emergency Contact" icon={Phone} error={errors.emergencyContact} required hint="10-digit number">
+                <input name="emergencyContact" type="tel" placeholder="Emergency contact number" value={formData.emergencyContact} onChange={handleChange} maxLength="10" className={inputCls("emergencyContact")} />
+              </InputField>
+            </div>
+          </div>
+
+          {/* Section: Address */}
+          <div className="bg-gradient-to-r from-red-600 to-red-700 px-8 py-4">
+            <h2 className="text-white font-semibold text-sm uppercase tracking-wider">Facility Address</h2>
+          </div>
+          <div className="p-8 space-y-5">
+            <InputField label="Street Address" icon={MapPin} error={errors["address.street"]} required>
+              <input name="address.street" type="text" placeholder="Enter street address" value={formData.address.street} onChange={handleChange} className={inputCls("address.street")} />
+            </InputField>
+
+            <div className="grid md:grid-cols-3 gap-5">
+              <InputField label="State" error={errors["address.state"]} required>
+                <select
+                  name="address.state"
+                  value={formData.address.state}
+                  onChange={handleStateChange}
+                  className="w-full px-4 py-3 bg-transparent outline-none text-sm text-gray-800 rounded-xl"
+                >
+                  <option value="">Select State</option>
+                  {Object.keys(STATES).map((s) => <option key={s} value={s}>{s}</option>)}
+                </select>
+              </InputField>
+              <InputField label="City" error={errors["address.city"]} required>
+                <select
+                  name="address.city"
+                  value={formData.address.city}
+                  onChange={handleChange}
+                  disabled={!formData.address.state}
+                  className="w-full px-4 py-3 bg-transparent outline-none text-sm text-gray-800 rounded-xl disabled:opacity-50"
+                >
+                  <option value="">Select City</option>
+                  {formData.address.state && STATES[formData.address.state].map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </InputField>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Pincode <span className="text-red-500">*</span></label>
+                <input
+                  name="address.pincode"
+                  type="text"
+                  placeholder="6-digit pincode"
+                  value={formData.address.pincode}
+                  onChange={handleChange}
+                  maxLength="6"
+                  className={`w-full px-4 py-3 border rounded-xl outline-none text-sm transition ${errors["address.pincode"] ? "border-red-400 bg-red-50 text-red-700" : "border-gray-200 bg-gray-50 focus:bg-white focus:border-red-400 text-gray-800"}`}
+                />
+                {errors["address.pincode"] && <p className="text-xs text-red-500 mt-1">⚠ {errors["address.pincode"]}</p>}
+              </div>
+            </div>
+          </div>
+
+          {/* Section: Operating Hours */}
+          <div className="bg-gradient-to-r from-red-600 to-red-700 px-8 py-4">
+            <h2 className="text-white font-semibold text-sm uppercase tracking-wider">Operating Hours</h2>
+          </div>
+          <div className="p-8 space-y-6">
+            {/* 24x7 toggle at top */}
+            <div className="flex gap-6">
+              <label className="flex items-center gap-2 cursor-pointer text-sm font-medium text-gray-700">
+                <input
+                  type="checkbox"
+                  name="is24x7"
+                  checked={formData.is24x7}
+                  onChange={handleChange}
+                  className="w-4 h-4 accent-red-500"
+                />
+                Open 24×7 (skip time selection)
+              </label>
+            </div>
+
+            {/* Time inputs — shown only if NOT 24x7 */}
+            {!formData.is24x7 && (
+              <div className="grid md:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                    Opening Time <span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative border border-gray-200 bg-white focus-within:border-red-400 rounded-xl flex items-center transition">
+                    <Clock className="absolute left-3 w-4 h-4 text-red-400 pointer-events-none" />
+                    <input
+                      type="time"
+                      name="operatingHours.open"
+                      value={formData.operatingHours.open}
+                      onChange={handleChange}
+                      className="w-full pl-10 pr-4 py-3 bg-transparent outline-none text-sm text-gray-800 rounded-xl cursor-pointer"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                    Closing Time <span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative border border-gray-200 bg-white focus-within:border-red-400 rounded-xl flex items-center transition">
+                    <Clock className="absolute left-3 w-4 h-4 text-red-400 pointer-events-none" />
+                    <input
+                      type="time"
+                      name="operatingHours.close"
+                      value={formData.operatingHours.close}
+                      onChange={handleChange}
+                      className="w-full pl-10 pr-4 py-3 bg-transparent outline-none text-sm text-gray-800 rounded-xl cursor-pointer"
+                    />
+                  </div>
+                </div>
+              </div>
             )}
 
-            {step < 3 ? (
-              <button
-                type="button"
-                onClick={handleNext}
-                className="px-6 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-medium"
-              >
-                Next Step
-              </button>
-            ) : (
-              <button
-                type="button" // Must be type="button"
-                onClick={handleSubmit} // Must call handleSubmit manually
-                disabled={isSubmitting}
-                className="px-6 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
-              >
-                {isSubmitting ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                    Registering...
-                  </>
-                ) : (
-                  "Register Facility"
-                )}
-              </button>
+            {formData.is24x7 && (
+              <p className="text-sm text-green-600 font-medium bg-green-50 border border-green-200 rounded-xl px-4 py-3">
+                ✅ Open 24×7 — no time restrictions apply
+              </p>
             )}
+
+            {/* Working Days */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-3">Working Days</label>
+              <div className="flex flex-wrap gap-3">
+                {WORKING_DAYS.map(({ value, label }) => {
+                  const selected = formData.operatingHours.workingDays.includes(value);
+                  return (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() => toggleWorkingDay(value)}
+                      className={`px-4 py-2 rounded-xl text-sm font-semibold border-2 transition-all duration-200 ${
+                        selected
+                          ? "bg-red-600 border-red-600 text-white shadow-md"
+                          : "bg-white border-gray-200 text-gray-600 hover:border-red-300 hover:text-red-600"
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
+              <p className="text-xs text-gray-400 mt-2">
+                Selected: {formData.operatingHours.workingDays.length > 0 ? formData.operatingHours.workingDays.join(", ") : "None"}
+              </p>
+            </div>
+          </div>
+
+          {/* Submit */}
+          <div className="px-8 pb-8">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full py-4 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl font-bold text-base hover:from-red-700 hover:to-red-800 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {isSubmitting ? (
+                <><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> Registering...</>
+              ) : (
+                <><Building2 className="w-5 h-5" /> Register Facility</>
+              )}
+            </button>
+            <p className="text-center text-xs text-gray-400 mt-4">
+              ⚠️ Your facility will be reviewed and approved by our admin team before activation.
+            </p>
+            <p className="text-center text-sm text-gray-500 mt-2">
+              Already registered?{" "}
+              <Link to="/login" className="text-red-600 font-semibold hover:underline">Login here</Link>
+            </p>
           </div>
         </form>
       </div>
+      <Footer />
     </div>
   );
 }

@@ -29,12 +29,12 @@ const facilitySchema = new mongoose.Schema(
     phone: {
       type: String,
       required: [true, "Phone number is required"],
-      match: [/^[6-9][0-9]{9}$/, "Please enter a valid 10-digit phone number"]
+      match: [/^\d{10}$/, "Please enter a valid 10-digit phone number"]
     },
     emergencyContact: {
       type: String,
       required: [true, "Emergency contact number is required"],
-      match: [/^[6-9][0-9]{9}$/, "Please enter a valid 10-digit phone number"]
+      match: [/^\d{10}$/, "Please enter a valid 10-digit phone number"]
     },
     address: {
       street: { type: String, required: [true, "Street address is required"] },
@@ -50,8 +50,7 @@ const facilitySchema = new mongoose.Schema(
     // 🧾 Facility Details
     registrationNumber: {
       type: String,
-      required: [true, "Registration number is required"],
-      unique: true,
+      sparse: true,
       uppercase: true,
       trim: true
     },
@@ -70,10 +69,10 @@ const facilitySchema = new mongoose.Schema(
       default: "Private"
     },
 
-    // 📄 Documents & Verification
+    // 📄 Documents & Verification (optional)
     documents: {
       registrationProof: {
-        url: { type: String, required: [true, "Document URL is required"] },
+        url: { type: String },
         filename: String,
         uploadedAt: { type: Date, default: Date.now }
       }
