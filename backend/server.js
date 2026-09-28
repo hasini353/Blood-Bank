@@ -25,7 +25,7 @@ const connectDB = async (req, res, next) => {
     return next();
   }
   try {
-    const mongoUri = process.env.MONGO_URI || "mongodb+srv://admin:admin123@login.r8hpvmw.mongodb.net/bbms?appName=login";
+    const mongoUri = process.env.MONGO_URI;
     await mongoose.connect(mongoUri);
     isConnected = true;
     console.log("MongoDB Connected ✅");
